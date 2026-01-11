@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Movie Scrubber</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1d2671, #c33764);
+    min-height: 100vh;
+    color: white;
+}
+.container {
+    text-align: center;
+    padding: 40px;
+}
+button {
+    padding: 12px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    background: #ff9800;
+    cursor: pointer;
+}
+.movies {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+.card {
+    background: rgba(255,255,255,0.15);
+    padding: 20px;
+    border-radius: 15px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎬 Movie Scrubber</h1>
+<button onclick="scrub()">Scrub</button>
+<div class="movies" id="movies"></div>
+</div>
+
+<script>
+function scrub() {
+fetch("/movies")
+.then(res => res.json())
+.then(data => {
+const movies = document.getElementById("movies");
+movies.innerHTML = "";
+data.forEach(m => {
+movies.innerHTML += `
+<div class="card">
+<h3>${m.name}</h3>
+<p>⭐ ${m.rating}</p>
+<p>📅 ${m.release_date}</p>
+</div>`;
+});
+});
+}
+</script>
+</body>
+</html>
