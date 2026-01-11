@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Risk Analyzer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Company Risk Analyzer</h2>
+    <input type="text" id="company" placeholder="Enter Company Name">
+    <input type="file" id="pdf" accept="application/pdf">
+    <button onclick="checkRisk()">Check Risk</button>
+    <div id="result"></div>
+</div>
+<script>
+function checkRisk(){
+    let formData = new FormData()
+    formData.append("company", document.getElementById("company").value)
+    formData.append("pdf", document.getElementById("pdf").files[0])
+
+    fetch("/check-risk",{method:"POST", body:formData})
+    .then(res=>res.json())
+    .then(data=>{
+        let color="green"
+        if(data.average_risk>70) color="red"
+        else if(data.average_risk>30) color="orange"
+        document.getElementById("result").innerHTML=`
+        <p>News Risk: <b>${data.news_risk}</b></p>
+        <p>Balance Sheet Risk: <b>${data.balance_risk}</b></p>
+        <p style="color:${color}">Average Risk: <b>${data.average_risk}%</b></p>`
+    })
+}
+</script>
+</body>
+</html>
